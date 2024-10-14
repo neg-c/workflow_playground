@@ -1,0 +1,25 @@
+name: cmake-format
+on: [pull_request]
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+      - uses: neg-c/cmake-format-action@v0.1.1
+        with:
+          source: '.'
+          exclude: 'third_party external'
+          inplace: true
+      - uses: EndBug/add-and-commit@v4
+        with:
+          author_name: QualityBot
+          author_email: robot@quality.com
+          message: ':art: Committing cmake-format changes'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
